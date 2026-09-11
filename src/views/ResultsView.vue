@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useFpvsStore } from '../stores/fpvs'
 import { createTimeSeriesChart } from '../utils/chartUtils'
+import { buildOnsetLogCsv, downloadCsv } from '../utils/csvExport'
 
 const store = useFpvsStore()
 
@@ -107,6 +108,18 @@ function backToSetup() {
   store.goTo('setup')
 }
 
+function exportCsv() {
+  const csv = buildOnsetLogCsv({
+    baseRateHz: store.baseRateHz,
+    oddballEvery: store.oddballEvery,
+    sequenceLengthSec: store.sequenceLengthSec,
+    stimulusSet: store.stimulusSet,
+    runStartDateTime: store.runStartDateTime,
+    onsetLog: store.onsetLog,
+  })
+  downloadCsv('fpvs-onset-log.csv', csv)
+}
+
 </script>
 
 <template>
@@ -114,6 +127,8 @@ function backToSetup() {
     <button type="button" class="back-btn" @click="backToSetup">Back</button>
     <h1>Fast Periodic Visual Stimulation</h1>
     <h2>Results</h2>
+
+    <button type="button" class="btn-accent" @click="exportCsv">Export CSV</button>
 
     <!-- Run config, for reference -->
     <table class="stats">

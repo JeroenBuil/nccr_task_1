@@ -51,6 +51,7 @@ function stimulusUpdateLoop(timestamp) {
       // Stimulus onset logging:
       store.onsetLog.push({
         index: targetIndex,
+        image: store.sequence[targetIndex].image,
         isOddball: store.sequence[targetIndex].isOddball,
         onsetMs: elapsed,
       })
@@ -69,9 +70,11 @@ function stimulusUpdateLoop(timestamp) {
 
 
 onMounted(() => {
+  store.runStartDateTime = new Date().toISOString() // real world time, for export metadata only
   startTime = performance.now() // capture startTime here (not from the first rAF callback, which fire up to a frame later)
   store.onsetLog.push({
     index: 0,
+    image: store.sequence[0].image,
     isOddball: store.sequence[0].isOddball,
     onsetMs: 0,
   }) // also log first stimulus entry here as the first stimulus is displayed on mount

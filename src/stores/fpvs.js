@@ -24,7 +24,9 @@ export const useFpvsStore = defineStore('fpvs', {
     sequence: [],
 
     // --- Run output ---
-    /** PLACEHOLDER: Onset timestamps (ms) logged by Run and displayed in Results. */
+    /** Time the run started (ISO string) => used for export (not the timing math) */
+    runStartDateTime: null,
+    /** Onset timestamps (ms) logged by Run and displayed in Results. */
     onsetLog: [],
   }),
   actions: {
