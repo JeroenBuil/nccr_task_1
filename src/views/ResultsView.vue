@@ -124,8 +124,8 @@ function backToSetup() {
           <th>Gaps</th><td>{{ gapCount }}</td>
         </tr>
         <tr>
-          <th>Min per gap</th><td>{{ minDroppedStimCount ?? 'n/a' }}</td>
-          <th>Max per gap</th><td>{{ maxDroppedStimCount ?? 'n/a' }}</td>
+          <th>Min dropped per gap</th><td>{{ minDroppedStimCount ?? 'n/a' }}</td>
+          <th>Max dropped per gap</th><td>{{ maxDroppedStimCount ?? 'n/a' }}</td>
         </tr>
       </tbody>
     </table>

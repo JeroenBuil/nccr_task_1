@@ -10,6 +10,9 @@ const store = useFpvsStore()
 // Get stimulus config
 const { path, baseImages, oddballImage } = STIMULUS_SETS[store.stimulusSet]
 
+// Clear the onset log from a previous run
+store.onsetLog = []
+
 // Generate stimuli sequence and stores it in store
 store.sequence = generateSequence({
   baseRateHz: store.baseRateHz,
