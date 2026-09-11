@@ -16,7 +16,8 @@ function resetToDefaults() {
 
 <template>
   <section class="view">
-    <h1>Setup</h1>
+    <h1>Fast Periodic Visual Stimulation</h1>
+    <h2>Setup</h2>
 
     <form class="form" @submit.prevent="start">
       <!-- Base Rate -->

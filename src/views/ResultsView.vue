@@ -6,6 +6,7 @@ const store = useFpvsStore()
 
 <template>
   <section class="view">
-    <h1>Results</h1>
+    <h1>Fast Periodic Visual Stimulation</h1>
+    <h2>Results</h2>
   </section>
 </template>

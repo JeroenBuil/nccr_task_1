@@ -19,6 +19,10 @@ export const useFpvsStore = defineStore('fpvs', {
     /** Name of the stimuli set folder (under public/stimuli/) */
     stimulusSet: 'fpvs',
 
+    // --- Generated at Run start ---
+    /** Ordered stimulus sequence for this run: [{ image, isOddball }, ...]. */
+    sequence: [],
+
     // --- Run output ---
     /** PLACEHOLDER: Onset timestamps (ms) logged by Run and displayed in Results. */
     onsetLog: [],
