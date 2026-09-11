@@ -21,7 +21,7 @@ function resetToDefaults() {
     <form class="form" @submit.prevent="start">
       <!-- Base Rate -->
       <div class="field">
-        <label for="base-rate">Base rate (Hz)</label>
+        <label for="base-rate" title="Stimulus presentation rate">Base rate [Hz]</label>
         <input
           id="base-rate"
           v-model.number="store.baseRateHz"
@@ -33,7 +33,7 @@ function resetToDefaults() {
 
       <!-- Oddball Every -->
       <div class="field">
-        <label for="oddball-every">Oddball every Nth stimulus</label>
+        <label for="oddball-every" title="Position of the oddball within each cycle">Oddball every Nth stimulus</label>
         <input
           id="oddball-every"
           v-model.number="store.oddballEvery"
@@ -45,7 +45,7 @@ function resetToDefaults() {
 
       <!-- Sequence Length -->
       <div class="field">
-        <label for="sequence-length">Sequence length (s)</label>
+        <label for="sequence-length" title="Total experiment run duration">Sequence length [s]</label>
         <input
           id="sequence-length"
           v-model.number="store.sequenceLengthSec"
@@ -57,8 +57,11 @@ function resetToDefaults() {
 
       <!-- Stimuli Set -->
       <div class="field">
-        <label for="stimulus-set">Stimulus set</label>
-        <select id="stimulus-set" v-model="store.stimulusSet">
+        <label for="stimulus-set" title="Stimuli set to run this experiment (Note: only FPVS available in this tech test)">Stimulus set</label>
+        <select 
+          id="stimulus-set" 
+          v-model="store.stimulusSet"
+        >
           <option value="fpvs">Fast Periodic Visual Stimulation (FPVS)</option>
         </select>
       </div>
