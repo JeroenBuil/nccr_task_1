@@ -41,7 +41,7 @@ const frameIntervalMs = 1000 / store.baseRateHz // time (in ms) each sequence fr
 function stimulusUpdateLoop(timestamp) {
   if (startTime === null) {
       startTime = timestamp
-      // Stimulus onset logging for first stimulus in sequence
+      // Stimulus onset logging for first stimulus (index=0) in sequence
       store.onsetLog.push({
         index: 0,
         isOddball: store.sequence[0].isOddball,
@@ -65,6 +65,7 @@ function stimulusUpdateLoop(timestamp) {
     // if all images in the sequence have been displayed, then move to the results view
     if (targetIndex >= store.sequence.length) {
       store.goTo('results')
+      return // sequence done => don't schedule another frame (go straight to onUnmounted instead)
     }
 
     // update rafId and reschedules this same function for the next frame
