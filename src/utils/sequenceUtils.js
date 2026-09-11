@@ -8,7 +8,7 @@
  * @param {number} sequenceLengthSec - target run duration in seconds
  * @param {string[]} baseImagePaths - resolved URLs of the base images
  * @param {string} oddballImagePath - resolved URL of the oddball image
- * @returns {string[]} ordered array of image paths, one per stimulus slot
+ * @returns {Array<{image: string, isOddball: boolean}>} ordered stimulus sequence
  */
 export function generateSequence({ baseRateHz, oddballEvery, sequenceLengthSec, baseImagePaths, oddballImagePath }) {
     const nStimuli = Math.ceil(sequenceLengthSec * baseRateHz)
@@ -21,7 +21,7 @@ export function generateSequence({ baseRateHz, oddballEvery, sequenceLengthSec, 
         
         // Every oddBallEvery-th slot insert the oddballImage
         if (iStim % oddballEvery === 0) {
-            sequence[stimIndex] = oddballImagePath // Set oddball image in sequence at stimIndex
+            sequence[stimIndex] = { image: oddballImagePath, isOddball: true }
             previousBaseImage = null // oddball image breaks immediate repeat, so reset previousBaseImage to null
         }
         // Else: insert a random base image, without allowing immediate repeats
@@ -29,7 +29,7 @@ export function generateSequence({ baseRateHz, oddballEvery, sequenceLengthSec, 
             const noRepeatCandidates = baseImagePaths.filter((path) => path !== previousBaseImage) // filter out previous base image
             const randomBaseIndex = Math.floor(Math.random() * noRepeatCandidates.length) // take random index from the noRepeat candidates
             const randomImage = noRepeatCandidates[randomBaseIndex]
-            sequence[stimIndex] = randomImage // Set random base image in sequence at stimIndex
+            sequence[stimIndex] = { image: randomImage, isOddball: false }
             previousBaseImage = randomImage
         }
     }

@@ -25,16 +25,17 @@ describe('generateSequence', () => {
 
   it('places the oddball at every Nth position and nowhere else', () => {
     const sequence = generateSequence(baseConfig)
-    sequence.forEach((image, index) => {
+    sequence.forEach((stimulus, index) => {
       const isOddballPosition = (index + 1) % baseConfig.oddballEvery === 0
-      expect(image === oddballImagePath).toBe(isOddballPosition)
+      expect(stimulus.isOddball).toBe(isOddballPosition)
+      expect(stimulus.image === oddballImagePath).toBe(isOddballPosition)
     })
   })
 
   it('never repeats the same image in two consecutive slots', () => {
     const sequence = generateSequence(baseConfig)
     for (let i = 1; i < sequence.length; i++) {
-      expect(sequence[i]).not.toBe(sequence[i - 1])
+      expect(sequence[i].image).not.toBe(sequence[i - 1].image)
     }
   })
 })
