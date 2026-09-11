@@ -1,5 +1,7 @@
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useFpvsStore } from '../stores/fpvs'
+import { createTimeSeriesChart } from '../utils/chartUtils'
 
 const store = useFpvsStore()
 
@@ -67,11 +69,39 @@ const worstCaseOddBallMsec = getWorstCaseMsec(
 const indexDeltas = getDeltas(store.onsetLog.map((entry) => entry.index))
 const droppedStimCount = indexDeltas.reduce((sum, delta) => sum + (delta - 1), 0)
 
-// Size of each individual gap (delta - 1), excluding transitions with no drop at all
+// Dropped stimuli gap stats, excluding entries where delta === 1 (no dropped stimmuli)
 const dropSizes = indexDeltas.map((delta) => delta - 1).filter((drop) => drop > 0)
 const minDroppedStimCount = dropSizes.length > 0 ? Math.min(...dropSizes) : null
 const maxDroppedStimCount = dropSizes.length > 0 ? Math.max(...dropSizes) : null
 const gapCount = dropSizes.length
+
+// Time (ms) at which each indexDelta / interval was observed — the onset
+// time of the "to" entry of that transition
+const deltaTimes = store.onsetLog.slice(1).map((entry) => Math.round(entry.onsetMs))
+const oddBallDeltaTimes = store.onsetLog
+  .filter((entry) => entry.isOddball)
+  .slice(1)
+  .map((entry) => Math.round(entry.onsetMs))
+
+const dropoutCanvas = ref(null)
+const intervalCanvas = ref(null)
+
+onMounted(() => {
+  createTimeSeriesChart(
+    dropoutCanvas.value,
+    [{ times: deltaTimes, values: indexDeltas, label: 'Stimuli index deltas (dropped stimulus => index delta > 1)' }],
+    { yLabel: 'Index delta', suggestedMin: 0, suggestedMax: 2 },
+  )
+
+  createTimeSeriesChart(
+    intervalCanvas.value,
+    [
+      { times: deltaTimes, values: onsetDeltasMsec, label: 'All intervals', color: 'rgba(170, 59, 255, 1)' },
+      { times: oddBallDeltaTimes, values: oddBallDeltasMsec, label: 'Oddball intervals', color: 'rgba(170, 59, 0, 1)' },
+    ],
+    { yLabel: 'Interval (ms)' },
+  )
+})
 
 function backToSetup() {
   store.goTo('setup')
@@ -84,6 +114,21 @@ function backToSetup() {
     <button type="button" class="back-btn" @click="backToSetup">Back</button>
     <h1>Fast Periodic Visual Stimulation</h1>
     <h2>Results</h2>
+
+    <!-- Run config, for reference -->
+    <table class="stats">
+      <caption>Run setup:</caption>
+      <tbody>
+        <tr>
+          <th>Base rate</th><td>{{ store.baseRateHz }} Hz</td>
+          <th>Oddball every</th><td>{{ store.oddballEvery }}th stimulus</td>
+        </tr>
+        <tr>
+          <th>Sequence length</th><td>{{ store.sequenceLengthSec }} s</td>
+          <th>Stimulus set</th><td>{{ store.stimulusSet }}</td>
+        </tr>
+      </tbody>
+    </table>
 
     <!-- All stim interval stats-->
     <table class="stats">
@@ -129,6 +174,14 @@ function backToSetup() {
         </tr>
       </tbody>
     </table>
+    <!-- Plot: intervals -->
+    <div class="chart-wrap">
+      <canvas ref="intervalCanvas"></canvas>
+    </div>
+    <!-- Plot: dropped stimuli -->
+    <div class="chart-wrap">
+      <canvas ref="dropoutCanvas"></canvas>
+    </div>
   </section>
 </template>
 
@@ -148,5 +201,11 @@ function backToSetup() {
 .stats td {
   text-align: left;
   padding: 4px 16px 4px 0;
+}
+
+.chart-wrap {
+  width: 100%;
+  max-width: 700px;
+  max-height: 300px;
 }
 </style>
