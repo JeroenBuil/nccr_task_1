@@ -144,3 +144,19 @@ select {
   background: var(--bg);
   color: var(--text-h);
 }
+
+button {
+  font: inherit;
+  padding: 8px 4px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.btn-accent {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}

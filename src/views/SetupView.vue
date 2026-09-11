@@ -6,6 +6,12 @@ const store = useFpvsStore()
 function start() {
   store.goTo('run')
 }
+function resetToDefaults() {
+  store.baseRateHz = 6
+  store.oddballEvery = 5
+  store.sequenceLengthSec = 60
+  store.stimulusSet = 'fpvs'
+}
 </script>
 
 <template>
@@ -57,7 +63,12 @@ function start() {
         </select>
       </div>
 
-      <button type="submit">Run</button>
+      <!-- Reset to default button -->
+      <button type="button" @click="resetToDefaults">Reset</button>
+
+      <!-- Run (submit form) button -->
+      <button type="submit" class="btn-accent">Run</button>
+
     </form>
   </section>
 </template>
