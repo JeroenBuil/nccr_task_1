@@ -42,16 +42,6 @@ const frameIntervalMs = 1000 / store.baseRateHz // time (in ms) each sequence fr
  * @param {DOMHighResTimeStamp} timestamp - timestamp supplied by requestAnimationFrame
  */
 function stimulusUpdateLoop(timestamp) {
-  if (startTime === null) {
-      startTime = timestamp
-      // Stimulus onset logging for first stimulus (index=0) in sequence
-      store.onsetLog.push({
-        index: 0,
-        isOddball: store.sequence[0].isOddball,
-        onsetMs: 0,
-      })
-    }
-
     const elapsed = timestamp - startTime
     const targetIndex = Math.floor(elapsed / frameIntervalMs) // updates targetIndex when it is time to show the next image in the sequence
 
@@ -77,8 +67,14 @@ function stimulusUpdateLoop(timestamp) {
     
   }
 
-// When RunView is mounted store animation frame request id
+
 onMounted(() => {
+  startTime = performance.now() // capture startTime here (not from the first rAF callback, which fire up to a frame later)
+  store.onsetLog.push({
+    index: 0,
+    isOddball: store.sequence[0].isOddball,
+    onsetMs: 0,
+  }) // also log first stimulus entry here as the first stimulus is displayed on mount
   rafId = requestAnimationFrame(stimulusUpdateLoop)
 })
 // When RunView is unmounted cancel animation frame request
