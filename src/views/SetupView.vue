@@ -63,7 +63,7 @@ function resetToDefaults() {
           id="stimulus-set" 
           v-model="store.stimulusSet"
         >
-          <option value="fpvs">Fast Periodic Visual Stimulation (FPVS)</option>
+          <option value="fpvs">fpvs (default)</option>
         </select>
       </div>
 

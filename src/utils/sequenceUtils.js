@@ -1,3 +1,3 @@
-export function generateSequence({ baseRateHz, oddBallEvery, sequenceLengthSec, baseImages, oddballImage }) {
-    
+export function generateSequence({ baseRateHz, oddBallEvery, sequenceLengthSec, baseImagePaths, oddballImagePath }) {
+
 }

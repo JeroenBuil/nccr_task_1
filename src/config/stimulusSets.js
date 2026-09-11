@@ -16,3 +16,8 @@ export const STIMULUS_SETS = {
     oddballImage: 'oddball_01.png',
   },
 }
+
+/** Resolves a stimulus set's path + filename into a URL servable from public/. */
+export function resolveStimulusPath(path, filename) {
+  return `/${path}/${filename}`
+}
