@@ -62,6 +62,17 @@ const worstCaseOddBallMsec = getWorstCaseMsec(
   targetIntervalMsec,
 )
 
+// Dropped stimuli: each entry onsetLog's index should always step by exactly 1
+// delta > 1 means that many indices were skipped (e.g. due to lag)
+const indexDeltas = getDeltas(store.onsetLog.map((entry) => entry.index))
+const droppedStimCount = indexDeltas.reduce((sum, delta) => sum + (delta - 1), 0)
+
+// Size of each individual gap (delta - 1), excluding transitions with no drop at all
+const dropSizes = indexDeltas.map((delta) => delta - 1).filter((drop) => drop > 0)
+const minDroppedStimCount = dropSizes.length > 0 ? Math.min(...dropSizes) : null
+const maxDroppedStimCount = dropSizes.length > 0 ? Math.max(...dropSizes) : null
+const gapCount = dropSizes.length
+
 function backToSetup() {
   store.goTo('setup')
 }
@@ -78,9 +89,13 @@ function backToSetup() {
     <table class="stats">
       <caption>All intervals:</caption>
       <tbody>
-        <tr><th>Target</th><td>{{ targetIntervalMsec.toFixed(2) }} ms ({{ store.baseRateHz.toFixed(2) }} Hz)</td></tr>
-        <tr><th>Mean ± std</th><td>{{ meanIntervalMsec.toFixed(2) }} ± {{ stdIntervalMsec.toFixed(2) }} ms</td></tr>
-        <tr><th>Min</th><td>{{ minIntervalMsec.toFixed(2) }} ms</td> <th>Max</th><td>{{ maxIntervalMsec.toFixed(2) }} ms</td></tr>
+        <tr>
+          <th>Target ({{ store.baseRateHz.toFixed(2) }} Hz)</th><td>{{ targetIntervalMsec.toFixed(2) }} ms</td>
+          <th>Mean ± std</th><td>{{ meanIntervalMsec.toFixed(2) }} ± {{ stdIntervalMsec.toFixed(2) }} ms</td>
+        </tr>
+        <tr>
+          <th>Min</th><td>{{ minIntervalMsec.toFixed(2) }} ms</td>
+          <th>Max</th><td>{{ maxIntervalMsec.toFixed(2) }} ms</td></tr>
         <tr><th>Worst case (vs. ideal time)</th><td>{{ worstCaseMsec.toFixed(2) }} ms</td></tr>
       </tbody>
     </table>
@@ -89,10 +104,29 @@ function backToSetup() {
     <table class="stats">
       <caption>Oddball intervals:</caption>
       <tbody>
-        <tr><th>Target</th><td>{{ targetOddBallIntervalMsec.toFixed(2) }} ms ({{ oddballRateHz.toFixed(2) }} Hz)</td></tr>
-        <tr><th>Mean ± std</th><td>{{ meanOddBallIntervalMsec.toFixed(2) }} ± {{ stdOddBallIntervalMsec.toFixed(2) }} ms</td></tr>
-        <tr><th>Min</th><td>{{ minOddBallIntervalMsec.toFixed(2) }} ms</td> <th>Max</th><td>{{ maxOddBallIntervalMsec.toFixed(2) }} ms</td></tr>
+        <tr>
+          <th>Target ({{ oddballRateHz.toFixed(2) }} Hz)</th><td>{{ targetOddBallIntervalMsec.toFixed(2) }} ms</td>
+          <th>Mean ± std</th><td>{{ meanOddBallIntervalMsec.toFixed(2) }} ± {{ stdOddBallIntervalMsec.toFixed(2) }} ms</td>
+        </tr>
+        <tr>
+          <th>Min</th><td>{{ minOddBallIntervalMsec.toFixed(2) }} ms</td>
+          <th>Max</th><td>{{ maxOddBallIntervalMsec.toFixed(2) }} ms</td></tr>
         <tr><th>Worst case (vs. ideal time)</th><td>{{ worstCaseOddBallMsec.toFixed(2) }} ms</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Dropped stimuli -->
+    <table class="stats">
+      <caption>Dropped stimuli:</caption>
+      <tbody>
+        <tr>
+          <th>Total dropped</th><td>{{ droppedStimCount }}</td>
+          <th>Gaps</th><td>{{ gapCount }}</td>
+        </tr>
+        <tr>
+          <th>Min per gap</th><td>{{ minDroppedStimCount ?? 'n/a' }}</td>
+          <th>Max per gap</th><td>{{ maxDroppedStimCount ?? 'n/a' }}</td>
+        </tr>
       </tbody>
     </table>
   </section>
