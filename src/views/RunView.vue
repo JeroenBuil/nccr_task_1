@@ -28,28 +28,46 @@ let startTime = null // start time when RunView is mounted
 let rafId = null // current outstanding frame id
   
 const currentIndex = ref(0)
-const currentStimulus = computed(() => store.sequence[currentIndex.value])
-const frameIntervalMs = 1000 / store.baseRateHz
+const currentStimulus = computed(() => store.sequence[currentIndex.value]) // derived reactive value => compute ensures currentStimulus is updated when currentIndex.value changes
+const frameIntervalMs = 1000 / store.baseRateHz // time (in ms) each sequence frame should be displayeed
 
-function stimulusUpdateLoop(timeNow) {
-
+/**
+ * requestAnimationFrame callback, rescheduling itself every frame.
+ * Advances currentIndex based on elapsed time, then reschedules itself.
+ * Navigates to Results once the sequence is exhausted.
+ *
+ * @param {DOMHighResTimeStamp} timestamp - timestamp supplied by requestAnimationFrame
+ */
+function stimulusUpdateLoop(timestamp) {
   if (startTime === null) {
-      startTime = timeNow
+      startTime = timestamp
+      // Stimulus onset logging for first stimulus in sequence
+      store.onsetLog.push({
+        index: 0,
+        isOddball: store.sequence[0].isOddball,
+        onsetMs: 0,
+      })
     }
 
-    const elapsed = timeNow - startTime
+    const elapsed = timestamp - startTime
     const targetIndex = Math.floor(elapsed / frameIntervalMs) // updates targetIndex when it is time to show the next image in the sequence
 
     // Update the currentIndex if the targetIndex updates => this triggers a rerender of the sequence viewer with the new image
     if (targetIndex > currentIndex.value && targetIndex < store.sequence.length) {
       currentIndex.value = targetIndex
+      // Stimulus onset logging:
+      store.onsetLog.push({
+        index: targetIndex,
+        isOddball: store.sequence[targetIndex].isOddball,
+        onsetMs: elapsed,
+      })
     }
     // if all images in the sequence have been displayed, then move to the results view
     if (targetIndex >= store.sequence.length) {
       store.goTo('results')
     }
 
-    // update rafId for the next frame and iteration of this stimulusUpdateLoop
+    // update rafId and reschedules this same function for the next frame
     rafId = requestAnimationFrame(stimulusUpdateLoop)
 
     
