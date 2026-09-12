@@ -2,6 +2,8 @@
 
 A Vue 3 web app that runs a Fast Periodic Visual Stimulation (FPVS) experiment in the browser: a rapid sequence of base images is shown at a fixed rate, with an "oddball" image inserted at a regular interval. The app measures how accurately stimuli were actually presented (timing jitter, dropped frames) and reports the results.
 
+See [Task 1 WriteUp - Jeroen Buil.pdf](Task%201%20WriteUp%20-%20Jeroen%20Buil.pdf) for the design decisions and other comments.
+
 ## How it works
 
 The app is a single-page Vue app with three views, switched via a small Pinia store (`useFpvsStore`) rather than a router:
