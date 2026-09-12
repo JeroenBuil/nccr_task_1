@@ -102,6 +102,8 @@ onUnmounted(() => {
 <style scoped>
 
 .view {
+  position: fixed;
+  inset: 0;
   background: rgb(128, 128, 128); /* mid-grey background for the stimulus as per requirements */
 }
 
