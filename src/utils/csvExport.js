@@ -17,7 +17,8 @@ export function buildOnsetLogCsv({
   runStartDateTime,
   onsetLog,
 }) {
-  const metaLines = [
+  // header lines with meta data
+  const headerLines = [
     `baseRateHz,${baseRateHz}`,
     `oddballEvery,${oddballEvery}`,
     `sequenceLengthSec,${sequenceLengthSec}`,
@@ -25,21 +26,28 @@ export function buildOnsetLogCsv({
     `runStartDateTime,${runStartDateTime}`,
   ]
 
+  // 
   const dataLines = [
     'index,image,isOddball,onsetMs',
     ...onsetLog.map((entry) => `${entry.index},${entry.image},${entry.isOddball},${entry.onsetMs}`),
   ]
 
-  return [...metaLines, '', ...dataLines].join('\n')
+  // join the header with the data with a white line in between
+  return [...headerLines, '', ...dataLines].join('\n')
 }
 
-/** Triggers a browser download of the given text content as a file. */
+/**
+ * Triggers a browser download of the given text content as a file.
+ *
+ * @param {string} filename - name the downloaded file is saved as
+ * @param {string} csvContent - raw CSV text to write to the file
+ */
 export function downloadCsv(filename, csvContent) {
-  const blob = new Blob([csvContent], { type: 'text/csv' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename
-  link.click()
-  URL.revokeObjectURL(url)
+  const blob = new Blob([csvContent], { type: 'text/csv' }) // convert to blob
+  const url = URL.createObjectURL(blob) // create url so that the download action can point to something
+  const link = document.createElement('a') // create a clickable link that triggers the download attribute (=>only works for <a> elements)
+  link.href = url // link this link to the url
+  link.download = filename // set filename as suggested file name
+  link.click() // programatically click the link
+  URL.revokeObjectURL(url) // cleanup (releases Blob)
 }

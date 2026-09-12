@@ -19,7 +19,7 @@ export function generateSequence({ baseRateHz, oddballEvery, sequenceLengthSec, 
     for (let iStim = 1; iStim <= nStimuli; iStim++) {
         const stimIndex = iStim - 1 // offset iStim number to get index
         
-        // Every oddBallEvery-th slot insert the oddballImage
+        // Every 'oddballEvery'-th slot insert the oddballImage in the sequence
         if (iStim % oddballEvery === 0) {
             sequence[stimIndex] = { image: oddballImagePath, isOddball: true }
             previousBaseImage = null // oddball image breaks immediate repeat, so reset previousBaseImage to null

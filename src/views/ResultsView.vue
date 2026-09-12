@@ -127,8 +127,9 @@ function exportCsv() {
     <button type="button" class="back-btn" @click="backToSetup">Back</button>
     <h1>Fast Periodic Visual Stimulation</h1>
     <h2>Results</h2>
-
-    <button type="button" class="btn-accent" @click="exportCsv">Export CSV</button>
+    
+    <!-- Export log button -->
+    <button type="button" class="btn-accent" @click="exportCsv">Export Onset Log (.csv)</button>
 
     <!-- Run config, for reference -->
     <table class="stats">
